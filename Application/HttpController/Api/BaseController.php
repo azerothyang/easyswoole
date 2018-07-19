@@ -335,6 +335,11 @@ class BaseController extends Controller
         return $this->redis->del($this->tokenPrefix.$token);
     }
 
+    /**
+     * 视图渲染
+     * @param $tplName
+     * @param array $tplData
+     */
     protected function view($tplName, $tplData = [])
     {
         $blade = new Blade([$this->TemplateViews], $this->TemplateCache);
