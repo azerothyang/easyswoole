@@ -16,6 +16,7 @@ use App\Utility\Utils;
 use EasySwoole\Config;
 use EasySwoole\Core\Component\Di;
 use EasySwoole\Core\Http\AbstractInterface\Controller;
+use Jenssegers\Blade\Blade;
 
 class BaseController extends Controller
 {
@@ -80,6 +81,9 @@ class BaseController extends Controller
      * @var \Memcached
      */
     protected $memcached;
+
+    protected $TemplateViews = EASYSWOOLE_ROOT . '/Templates/';
+    protected $TemplateCache = EASYSWOOLE_ROOT . '/Temp/TplCache';
 
     /**
      * 返回false 则终止后续调用控制器方法, 直接返回
@@ -329,6 +333,13 @@ class BaseController extends Controller
      */
     protected function delToken(&$token){
         return $this->redis->del($this->tokenPrefix.$token);
+    }
+
+    protected function view($tplName, $tplData = [])
+    {
+        $blade = new Blade([$this->TemplateViews], $this->TemplateCache);
+        $viewTemplate = $blade->render($tplName, $tplData);
+        $this->response()->write($viewTemplate);
     }
 
 }
